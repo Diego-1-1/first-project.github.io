@@ -2,11 +2,18 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PhotoShare Pro — Ваша фотогалерея</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>PhotoBlog - Делись моментами</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
         :root {
             --primary: #6366f1;
             --primary-dark: #4f46e5;
@@ -16,26 +23,8 @@
             --text: #1e293b;
             --text-secondary: #64748b;
             --border: #e2e8f0;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-            --radius: 16px;
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        [data-theme="dark"] {
-            --bg: #0f172a;
-            --surface: #1e293b;
-            --text: #f1f5f9;
-            --text-secondary: #94a3b8;
-            --border: #334155;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-            --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            --shadow: 0 1px 3px rgba(0,0,0,0.1);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1);
         }
 
         body {
@@ -43,877 +32,289 @@
             background: var(--bg);
             color: var(--text);
             line-height: 1.6;
-            transition: var(--transition);
-            min-height: 100vh;
-        }
-
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes slideIn {
-            from { transform: translateX(-100%); }
-            to { transform: translateX(0); }
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-
-        @keyframes gradient {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-
-        /* Login Screen */
-        .login-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(-45deg, #6366f1, #8b5cf6, #ec4899, #f43f5e);
-            background-size: 400% 400%;
-            animation: gradient 15s ease infinite;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            transition: opacity 0.5s;
-        }
-
-        .login-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .login-box {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 3rem;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
-            text-align: center;
-            max-width: 400px;
-            width: 90%;
-            animation: fadeIn 0.6s;
-        }
-
-        [data-theme="dark"] .login-box {
-            background: rgba(30, 41, 59, 0.95);
-        }
-
-        .login-box h1 {
-            font-size: 2.5rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #6366f1, #ec4899);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .login-box p {
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
-        }
-
-        .password-input {
-            width: 100%;
-            padding: 1rem 1.5rem;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-            transition: var(--transition);
-            background: var(--surface);
-            color: var(--text);
-        }
-
-        .password-input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
-        }
-
-        .btn {
-            padding: 0.875rem 2rem;
-            border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            color: white;
-            box-shadow: 0 4px 15px rgba(99, 102, 241, 0.4);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
-        }
-
-        .btn-secondary {
-            background: var(--surface);
-            color: var(--text);
-            border: 2px solid var(--border);
-        }
-
-        .btn-secondary:hover {
-            background: var(--bg);
-        }
-
-        .btn-icon {
-            width: 40px;
-            height: 40px;
-            padding: 0;
-            border-radius: 10px;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
+            padding-bottom: 70px;
         }
 
         /* Header */
-        header {
+        .header {
             background: var(--surface);
             border-bottom: 1px solid var(--border);
             position: sticky;
             top: 0;
             z-index: 1000;
-            backdrop-filter: blur(10px);
+            padding: 1rem;
+            box-shadow: var(--shadow);
         }
 
         .header-content {
-            max-width: 1400px;
+            max-width: 600px;
             margin: 0 auto;
-            padding: 1rem 2rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 2rem;
         }
 
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
             font-size: 1.5rem;
             font-weight: 800;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .logo i {
-            font-size: 2rem;
-            -webkit-text-fill-color: var(--primary);
-        }
-
-        .search-bar {
-            flex: 1;
-            max-width: 600px;
-            position: relative;
-        }
-
-        .search-bar input {
-            width: 100%;
-            padding: 0.875rem 1.5rem 0.875rem 3rem;
-            border: 2px solid var(--border);
-            border-radius: 50px;
-            background: var(--bg);
-            color: var(--text);
-            font-size: 1rem;
-            transition: var(--transition);
-        }
-
-        .search-bar input:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-        }
-
-        .search-bar i {
-            position: absolute;
-            left: 1.25rem;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--text-secondary);
         }
 
         .header-actions {
             display: flex;
-            align-items: center;
             gap: 1rem;
         }
 
-        .theme-toggle, .notification-btn {
-            background: var(--bg);
-            border: 2px solid var(--border);
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .icon-btn {
+            background: none;
+            border: none;
             font-size: 1.25rem;
             color: var(--text);
-            transition: var(--transition);
+            cursor: pointer;
+            padding: 0.5rem;
             position: relative;
-        }
-
-        .theme-toggle:hover, .notification-btn:hover {
-            border-color: var(--primary);
-            transform: translateY(-2px);
         }
 
         .notification-badge {
             position: absolute;
-            top: -5px;
-            right: -5px;
+            top: 0;
+            right: 0;
             background: var(--secondary);
             color: white;
-            font-size: 0.75rem;
+            font-size: 0.625rem;
             padding: 0.125rem 0.375rem;
             border-radius: 10px;
             font-weight: 700;
         }
 
-        .user-avatar {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: 700;
-            cursor: pointer;
-            border: 3px solid var(--border);
-            transition: var(--transition);
-        }
-
-        .user-avatar:hover {
-            transform: scale(1.1);
-            border-color: var(--primary);
-        }
-
-        /* Main Layout */
+        /* Main Container */
         .container {
-            max-width: 1400px;
+            max-width: 600px;
             margin: 0 auto;
-            padding: 2rem;
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 2rem;
+            padding: 1rem;
         }
 
-        /* Sidebar */
-        .sidebar {
-            position: sticky;
-            top: 100px;
-            height: calc(100vh - 120px);
-            overflow-y: auto;
-        }
-
-        .sidebar-section {
+        /* Create Post */
+        .create-post {
             background: var(--surface);
-            border-radius: var(--radius);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            border-radius: 16px;
+            padding: 1rem;
+            margin-bottom: 1rem;
             box-shadow: var(--shadow);
         }
 
-        .sidebar-title {
-            font-size: 0.875rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
-        .nav-item {
+        .create-post-header {
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            padding: 0.75rem 1rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: var(--transition);
-            margin-bottom: 0.5rem;
-            color: var(--text);
+            margin-bottom: 1rem;
         }
 
-        .nav-item:hover, .nav-item.active {
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
-            color: var(--primary);
-        }
-
-        .nav-item i {
-            width: 20px;
-            text-align: center;
-        }
-
-        .album-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0.75rem;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: var(--transition);
-            margin-bottom: 0.5rem;
-        }
-
-        .album-item:hover {
-            background: var(--bg);
-        }
-
-        .album-info h4 {
-            font-size: 0.9rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .album-info span {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-        }
-
-        .album-actions button {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            padding: 0.25rem;
-            margin-left: 0.5rem;
-            transition: var(--transition);
-        }
-
-        .album-actions button:hover {
-            color: var(--primary);
-        }
-
-        .stats-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .stat-card {
-            background: var(--bg);
-            padding: 1rem;
-            border-radius: 12px;
-            text-align: center;
-        }
-
-        .stat-value {
-            font-size: 1.5rem;
-            font-weight: 800;
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             background: linear-gradient(135deg, var(--primary), var(--secondary));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            color: var(--text-secondary);
-            margin-top: 0.25rem;
-        }
-
-        /* Main Content */
-        .main-content {
-            min-height: calc(100vh - 200px);
-        }
-
-        .content-header {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .content-title {
-            font-size: 1.75rem;
-            font-weight: 800;
-        }
-
-        .view-options {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .filter-select {
-            padding: 0.625rem 1rem;
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            background: var(--surface);
-            color: var(--text);
-            cursor: pointer;
-            font-family: inherit;
-        }
-
-        .view-toggle {
-            display: flex;
-            background: var(--surface);
-            border: 2px solid var(--border);
-            border-radius: 10px;
-            overflow: hidden;
-        }
-
-        .view-toggle button {
-            padding: 0.625rem 1rem;
-            border: none;
-            background: transparent;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: var(--transition);
-        }
-
-        .view-toggle button.active {
-            background: var(--primary);
+            justify-content: center;
             color: white;
-        }
-
-        /* Upload Area */
-        .upload-section {
-            background: var(--surface);
-            border-radius: var(--radius);
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: var(--shadow);
-        }
-
-        .upload-tabs {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-            border-bottom: 2px solid var(--border);
-        }
-
-        .upload-tab {
-            padding: 0.75rem 1.5rem;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-weight: 600;
-            cursor: pointer;
-            position: relative;
-            transition: var(--transition);
-        }
-
-        .upload-tab.active {
-            color: var(--primary);
-        }
-
-        .upload-tab.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background: var(--primary);
-        }
-
-        .upload-area {
-            border: 3px dashed var(--border);
-            border-radius: var(--radius);
-            padding: 3rem 2rem;
-            text-align: center;
-            cursor: pointer;
-            transition: var(--transition);
-            background: var(--bg);
-        }
-
-        .upload-area:hover, .upload-area.dragover {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.05);
-            transform: scale(1.01);
-        }
-
-        .upload-icon {
-            width: 80px;
-            height: 80px;
-            margin: 0 auto 1.5rem;
-            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(236, 72, 153, 0.1));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 2.5rem;
-            color: var(--primary);
-        }
-
-        .upload-area h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .upload-area p {
-            color: var(--text-secondary);
-            margin-bottom: 1rem;
-        }
-
-        .upload-formats {
-            display: flex;
-            justify-content: center;
-            gap: 0.5rem;
-            flex-wrap: wrap;
-        }
-
-        .format-badge {
-            background: var(--surface);
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            color: var(--text-secondary);
-            border: 1px solid var(--border);
-        }
-
-        /* Photo Form */
-        .photo-form {
-            display: none;
-            margin-top: 2rem;
-            padding-top: 2rem;
-            border-top: 2px solid var(--border);
-            animation: fadeIn 0.3s;
-        }
-
-        .photo-form.active {
-            display: block;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 2rem;
-        }
-
-        .preview-section {
-            position: relative;
-        }
-
-        .preview-image {
-            width: 100%;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .image-filters {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 1rem;
-            flex-wrap: wrap;
-        }
-
-        .filter-btn {
-            padding: 0.5rem 1rem;
-            border: 2px solid var(--border);
-            background: var(--surface);
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.875rem;
-            transition: var(--transition);
-        }
-
-        .filter-btn:hover, .filter-btn.active {
-            border-color: var(--primary);
-            background: rgba(99, 102, 241, 0.1);
-            color: var(--primary);
-        }
-
-        .form-fields {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .form-group label {
-            font-weight: 600;
-            font-size: 0.9rem;
-        }
-
-        .form-group input,
-        .form-group textarea,
-        .form-group select {
-            padding: 0.875rem 1rem;
-            border: 2px solid var(--border);
-            border-radius: 12px;
-            background: var(--surface);
-            color: var(--text);
-            font-family: inherit;
+            font-weight: 700;
             font-size: 1rem;
-            transition: var(--transition);
         }
 
-        .form-group input:focus,
-        .form-group textarea:focus,
-        .form-group select:focus {
-            outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        /* Gallery */
-        .gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .gallery.list {
-            grid-template-columns: 1fr;
-        }
-
-        .photo-card {
-            background: var(--surface);
-            border-radius: var(--radius);
-            overflow: hidden;
-            box-shadow: var(--shadow);
-            transition: var(--transition);
-            animation: fadeIn 0.5s;
-            position: relative;
-        }
-
-        .photo-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--shadow-lg);
-        }
-
-        .photo-card.list {
-            display: flex;
-            flex-direction: row;
-        }
-
-        .photo-card.list .photo-image {
-            width: 200px;
-            height: 200px;
-        }
-
-        .photo-image-wrapper {
-            position: relative;
-            overflow: hidden;
-            cursor: pointer;
-        }
-
-        .photo-image {
-            width: 100%;
-            height: 250px;
-            object-fit: cover;
-            transition: transform 0.3s;
-        }
-
-        .photo-card:hover .photo-image {
-            transform: scale(1.05);
-        }
-
-        .photo-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .photo-card:hover .photo-overlay {
-            opacity: 1;
-        }
-
-        .overlay-btn {
-            width: 44px;
-            height: 44px;
-            border-radius: 50%;
-            background: white;
+        .create-post-input {
+            flex: 1;
+            background: var(--bg);
             border: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            font-size: 1.1rem;
-            color: var(--text);
-            transition: var(--transition);
-            transform: translateY(10px);
-        }
-
-        .photo-card:hover .overlay-btn {
-            transform: translateY(0);
-        }
-
-        .overlay-btn:hover {
-            background: var(--primary);
-            color: white;
-        }
-
-        .photo-badge {
-            position: absolute;
-            top: 1rem;
-            left: 1rem;
-            background: rgba(255, 255, 255, 0.95);
-            padding: 0.375rem 0.75rem;
             border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-            backdrop-filter: blur(10px);
+            padding: 0.75rem 1rem;
+            font-family: inherit;
+            font-size: 0.95rem;
+            cursor: pointer;
         }
 
-        .photo-content {
-            padding: 1.25rem;
-        }
-
-        .photo-header {
+        .create-post-actions {
             display: flex;
-            align-items: flex-start;
-            justify-content: space-between;
-            margin-bottom: 0.75rem;
-        }
-
-        .photo-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            margin-bottom: 0.25rem;
-        }
-
-        .photo-album {
-            font-size: 0.85rem;
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        .photo-desc {
-            color: var(--text-secondary);
-            font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 1rem;
-        }
-
-        .photo-meta {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding-top: 1rem;
+            gap: 0.5rem;
+            padding-top: 0.75rem;
             border-top: 1px solid var(--border);
         }
 
-        .photo-date {
-            font-size: 0.85rem;
-            color: var(--text-secondary);
-        }
-
-        .photo-actions {
-            display: flex;
-            gap: 0.75rem;
-        }
-
         .action-btn {
+            flex: 1;
             display: flex;
             align-items: center;
-            gap: 0.375rem;
-            padding: 0.5rem 0.875rem;
-            background: var(--bg);
+            justify-content: center;
+            gap: 0.5rem;
+            padding: 0.625rem;
+            background: none;
             border: none;
             border-radius: 8px;
-            cursor: pointer;
-            font-size: 0.875rem;
+            color: var(--text-secondary);
             font-weight: 600;
-            color: var(--text);
-            transition: var(--transition);
+            cursor: pointer;
+            transition: all 0.2s;
         }
 
         .action-btn:hover {
-            background: var(--primary);
-            color: white;
+            background: var(--bg);
+            color: var(--primary);
         }
 
-        .action-btn.liked {
-            background: var(--secondary);
-            color: white;
+        .action-btn i {
+            font-size: 1.1rem;
         }
 
-        .like-count {
-            font-variant-numeric: tabular-nums;
+        /* Posts Feed */
+        .post {
+            background: var(--surface);
+            border-radius: 16px;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .post-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 1rem;
+        }
+
+        .post-author {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .author-info h4 {
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .author-info span {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+        }
+
+        .post-menu {
+            background: none;
+            border: none;
+            font-size: 1.25rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.25rem;
+        }
+
+        .post-image {
+            width: 100%;
+            max-height: 500px;
+            object-fit: cover;
+        }
+
+        .post-content {
+            padding: 1rem;
+        }
+
+        .post-actions {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 0.75rem;
+        }
+
+        .post-action-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: none;
+            border: none;
+            font-weight: 600;
+            color: var(--text-secondary);
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .post-action-btn:hover {
+            background: var(--bg);
+        }
+
+        .post-action-btn.liked {
+            color: var(--secondary);
+        }
+
+        .post-action-btn.liked i {
+            animation: likeAnimation 0.3s ease;
+        }
+
+        @keyframes likeAnimation {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.3); }
+        }
+
+        .post-likes {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            padding: 0 0.25rem;
+        }
+
+        .post-description {
+            margin-bottom: 0.5rem;
+            line-height: 1.5;
+        }
+
+        .post-description strong {
+            margin-right: 0.25rem;
+        }
+
+        .view-comments {
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .post-time {
+            font-size: 0.8rem;
+            color: var(--text-secondary);
+            text-transform: uppercase;
         }
 
         /* Comments Section */
         .comments-section {
-            padding: 1.25rem;
-            background: var(--bg);
+            display: none;
+            padding: 0 1rem 1rem;
             border-top: 1px solid var(--border);
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
         }
 
-        .comments-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1rem;
-        }
-
-        .comments-count {
-            font-weight: 700;
-            font-size: 0.9rem;
-        }
-
-        .comment-toggle {
-            background: none;
-            border: none;
-            color: var(--primary);
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        .comments-list {
-            display: flex;
-            flex-direction: column;
-            gap: 0.75rem;
-            max-height: 200px;
-            overflow-y: auto;
+        .comments-section.active {
+            display: block;
         }
 
         .comment {
             display: flex;
             gap: 0.75rem;
-            align-items: flex-start;
+            margin-bottom: 0.75rem;
         }
 
         .comment-avatar {
@@ -932,56 +333,103 @@
 
         .comment-content {
             flex: 1;
-            background: var(--surface);
-            padding: 0.75rem;
-            border-radius: 12px;
+            background: var(--bg);
+            padding: 0.625rem 0.875rem;
+            border-radius: 16px;
         }
 
         .comment-author {
-            font-weight: 700;
-            font-size: 0.875rem;
+            font-weight: 600;
+            font-size: 0.85rem;
             margin-bottom: 0.25rem;
         }
 
         .comment-text {
             font-size: 0.9rem;
-            color: var(--text-secondary);
+            line-height: 1.4;
         }
 
-        .comment-form {
+        .add-comment {
             display: flex;
             gap: 0.75rem;
-            margin-top: 1rem;
+            margin-top: 0.75rem;
+            align-items: center;
         }
 
         .comment-input {
             flex: 1;
-            padding: 0.75rem 1rem;
-            border: 2px solid var(--border);
+            background: var(--bg);
+            border: none;
             border-radius: 20px;
-            background: var(--surface);
-            color: var(--text);
+            padding: 0.625rem 1rem;
             font-family: inherit;
+            font-size: 0.9rem;
         }
 
-        .comment-input:focus {
-            outline: none;
-            border-color: var(--primary);
+        .send-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Modal */
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 0.5rem 0;
+            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.05);
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0.5rem;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 1.25rem;
+            transition: all 0.2s;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item span {
+            font-size: 0.7rem;
+            font-weight: 600;
+        }
+
+        /* Upload Modal */
         .modal {
             display: none;
             position: fixed;
             top: 0;
             left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.95);
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
             z-index: 2000;
-            align-items: center;
+            align-items: flex-end;
             justify-content: center;
-            padding: 2rem;
         }
 
         .modal.active {
@@ -989,151 +437,215 @@
         }
 
         .modal-content {
-            position: relative;
-            max-width: 90%;
-            max-height: 90%;
+            background: var(--surface);
+            width: 100%;
+            max-width: 600px;
+            border-radius: 20px 20px 0 0;
+            padding: 1.5rem;
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-header {
             display: flex;
-            flex-direction: column;
             align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
         }
 
-        .modal-image {
-            max-width: 100%;
-            max-height: 85vh;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow-lg);
+        .modal-title {
+            font-size: 1.25rem;
+            font-weight: 700;
         }
 
-        .modal-close {
-            position: absolute;
-            top: -50px;
-            right: 0;
+        .close-btn {
             background: none;
             border: none;
-            color: white;
-            font-size: 2.5rem;
-            cursor: pointer;
-            width: 50px;
-            height: 50px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            transition: var(--transition);
-        }
-
-        .modal-close:hover {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .modal-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
-            color: white;
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            cursor: pointer;
             font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-secondary);
+        }
+
+        .upload-area {
+            border: 2px dashed var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            margin-bottom: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.05);
+        }
+
+        .upload-area i {
+            font-size: 3rem;
+            color: var(--primary);
+            margin-bottom: 1rem;
+        }
+
+        .upload-preview {
+            width: 100%;
+            max-height: 300px;
+            object-fit: cover;
+            border-radius: 12px;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .upload-preview.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 0.875rem;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            font-family: inherit;
+            font-size: 1rem;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .submit-btn {
+            width: 100%;
+            padding: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .submit-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* Stories */
+        .stories-container {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-            backdrop-filter: blur(10px);
+            gap: 1rem;
+            overflow-x: auto;
+            padding: 1rem 0;
+            margin-bottom: 1rem;
+            scrollbar-width: none;
         }
 
-        .modal-nav:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .stories-container::-webkit-scrollbar {
+            display: none;
         }
 
-        .modal-nav.prev {
-            left: -80px;
-        }
-
-        .modal-nav.next {
-            right: -80px;
-        }
-
-        /* Toast Notifications */
-        .toast-container {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            z-index: 3000;
+        .story {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
-        }
-
-        .toast {
-            background: var(--surface);
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            box-shadow: var(--shadow-lg);
-            display: flex;
             align-items: center;
-            gap: 1rem;
-            animation: slideIn 0.3s;
-            border-left: 4px solid var(--primary);
+            gap: 0.5rem;
+            cursor: pointer;
+            flex-shrink: 0;
         }
 
-        .toast.success {
-            border-left-color: #10b981;
+        .story-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            padding: 3px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
         }
 
-        .toast.error {
-            border-left-color: #ef4444;
+        .story-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--surface);
         }
 
-        .toast-icon {
-            font-size: 1.25rem;
+        .story-name {
+            font-size: 0.8rem;
+            font-weight: 600;
+            max-width: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
         }
 
-        .toast.success .toast-icon {
-            color: #10b981;
+        /* Responsive */
+        @media (min-width: 768px) {
+            body {
+                padding-bottom: 0;
+            }
+
+            .bottom-nav {
+                display: none;
+            }
+
+            .container {
+                padding: 2rem 1rem;
+            }
+
+            .desktop-nav {
+                display: flex;
+                position: fixed;
+                left: 0;
+                top: 0;
+                bottom: 0;
+                width: 280px;
+                background: var(--surface);
+                border-right: 1px solid var(--border);
+                flex-direction: column;
+                padding: 2rem;
+                gap: 1rem;
+            }
+
+            .main-content {
+                margin-left: 280px;
+                max-width: 600px;
+                margin-right: auto;
+            }
         }
 
-        .toast.error .toast-icon {
-            color: #ef4444;
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 4rem 2rem;
-            grid-column: 1 / -1;
-        }
-
-        .empty-icon {
-            font-size: 5rem;
-            margin-bottom: 1.5rem;
-            opacity: 0.5;
-        }
-
-        .empty-state h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .empty-state p {
-            color: var(--text-secondary);
-            margin-bottom: 2rem;
+        @media (max-width: 767px) {
+            .desktop-nav {
+                display: none;
+            }
         }
 
         /* Loading */
         .loading {
             display: flex;
-            align-items: center;
             justify-content: center;
-            padding: 3rem;
+            padding: 2rem;
         }
 
         .spinner {
-            width: 50px;
-            height: 50px;
+            width: 40px;
+            height: 40px;
             border: 4px solid var(--border);
             border-top-color: var(--primary);
             border-radius: 50%;
@@ -1144,1005 +656,473 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .container {
-                grid-template-columns: 1fr;
-            }
-
-            .sidebar {
-                position: static;
-                height: auto;
-            }
-
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-secondary);
         }
 
-        @media (max-width: 768px) {
-            .header-content {
-                flex-wrap: wrap;
-            }
-
-            .search-bar {
-                order: 3;
-                max-width: 100%;
-                width: 100%;
-            }
-
-            .gallery {
-                grid-template-columns: 1fr;
-            }
-
-            .modal-nav {
-                display: none;
-            }
-
-            .content-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
         }
 
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
+        /* Toast Notification */
+        .toast {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--text);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 12px;
+            font-weight: 600;
+            opacity: 0;
+            transition: all 0.3s;
+            z-index: 3000;
+            box-shadow: var(--shadow-lg);
         }
 
-        ::-webkit-scrollbar-track {
-            background: var(--bg);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border);
-            border-radius: 4px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-secondary);
-        }
-
-        /* Mobile Menu */
-        .mobile-menu-btn {
-            display: none;
-            background: none;
-            border: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--text);
-        }
-
-        @media (max-width: 768px) {
-            .mobile-menu-btn {
-                display: block;
-            }
-
-            .sidebar {
-                position: fixed;
-                left: -100%;
-                top: 0;
-                width: 80%;
-                max-width: 300px;
-                height: 100vh;
-                background: var(--surface);
-                z-index: 1500;
-                padding: 2rem;
-                transition: var(--transition);
-                box-shadow: var(--shadow-lg);
-            }
-
-            .sidebar.active {
-                left: 0;
-            }
-
-            .sidebar-overlay {
-                display: none;
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 1400;
-            }
-
-            .sidebar-overlay.active {
-                display: block;
-            }
+        .toast.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
         }
     </style>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div class="login-screen" id="loginScreen">
-        <div class="login-box">
-            <h1><i class="fas fa-camera"></i> PhotoShare Pro</h1>
-            <p>Введите пароль для доступа к вашей галерее</p>
-            <input type="password" class="password-input" id="passwordInput" placeholder="Пароль (admin)">
-            <button class="btn btn-primary" onclick="login()">
-                <i class="fas fa-sign-in-alt"></i> Войти
-            </button>
-            <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--text-secondary);">
-                Пароль по умолчанию: <strong>admin</strong>
-            </p>
-        </div>
-    </div>
+    <!-- Desktop Navigation -->
+    <nav class="desktop-nav">
+        <div class="logo" style="margin-bottom: 2rem;">PhotoBlog</div>
+        <button class="action-btn" style="justify-content: flex-start; padding: 1rem;">
+            <i class="fas fa-home"></i> Лента
+        </button>
+        <button class="action-btn" style="justify-content: flex-start; padding: 1rem;">
+            <i class="fas fa-compass"></i> Поиск
+        </button>
+        <button class="action-btn" style="justify-content: flex-start; padding: 1rem;">
+            <i class="fas fa-heart"></i> Уведомления
+        </button>
+        <button class="action-btn" style="justify-content: flex-start; padding: 1rem;">
+            <i class="fas fa-user"></i> Профиль
+        </button>
+    </nav>
 
     <!-- Header -->
-    <header>
+    <header class="header">
         <div class="header-content">
-            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
-                <i class="fas fa-bars"></i>
-            </button>
-            
-            <div class="logo">
-                <i class="fas fa-camera"></i>
-                PhotoShare Pro
-            </div>
-
-            <div class="search-bar">
-                <i class="fas fa-search"></i>
-                <input type="text" id="searchInput" placeholder="Поиск фотографий..." oninput="searchPhotos()">
-            </div>
-
+            <div class="logo">PhotoBlog</div>
             <div class="header-actions">
-                <button class="notification-btn" onclick="showNotifications()">
-                    <i class="fas fa-bell"></i>
-                    <span class="notification-badge" id="notifBadge">3</span>
+                <button class="icon-btn">
+                    <i class="fas fa-heart"></i>
+                    <span class="notification-badge">3</span>
                 </button>
-                
-                <button class="theme-toggle" onclick="toggleTheme()">
-                    <i class="fas fa-moon" id="themeIcon"></i>
+                <button class="icon-btn">
+                    <i class="fas fa-paper-plane"></i>
                 </button>
-
-                <div class="user-avatar" onclick="showProfile()">
-                    JD
-                </div>
             </div>
         </div>
     </header>
 
-    <!-- Main Container -->
-    <div class="container">
-        <!-- Sidebar -->
-        <aside class="sidebar" id="sidebar">
-            <div class="sidebar-section">
-                <div class="sidebar-title">Меню</div>
-                <nav>
-                    <div class="nav-item active" onclick="filterBy('all')">
-                        <i class="fas fa-th-large"></i>
-                        <span>Все фото</span>
-                    </div>
-                    <div class="nav-item" onclick="filterBy('favorites')">
-                        <i class="fas fa-heart"></i>
-                        <span>Избранное</span>
-                    </div>
-                    <div class="nav-item" onclick="filterBy('recent')">
-                        <i class="fas fa-clock"></i>
-                        <span>Недавние</span>
-                    </div>
-                    <div class="nav-item" onclick="filterBy('popular')">
-                        <i class="fas fa-fire"></i>
-                        <span>Популярное</span>
-                    </div>
-                </nav>
-            </div>
-
-            <div class="sidebar-section">
-                <div class="sidebar-title">Альбомы</div>
-                <div id="albumsList">
-                    <!-- Albums will be inserted here -->
+    <!-- Main Content -->
+    <div class="container main-content">
+        <!-- Stories -->
+        <div class="stories-container">
+            <div class="story">
+                <div class="story-avatar">
+                    <img src="https://i.pravatar.cc/150?img=1" alt="Your story">
                 </div>
-                <button class="btn btn-secondary" style="width: 100%; margin-top: 1rem;" onclick="createAlbum()">
-                    <i class="fas fa-plus"></i> Новый альбом
+                <span class="story-name">Ваша история</span>
+            </div>
+            <div class="story">
+                <div class="story-avatar">
+                    <img src="https://i.pravatar.cc/150?img=2" alt="Story">
+                </div>
+                <span class="story-name">Анна</span>
+            </div>
+            <div class="story">
+                <div class="story-avatar">
+                    <img src="https://i.pravatar.cc/150?img=3" alt="Story">
+                </div>
+                <span class="story-name">Максим</span>
+            </div>
+            <div class="story">
+                <div class="story-avatar">
+                    <img src="https://i.pravatar.cc/150?img=4" alt="Story">
+                </div>
+                <span class="story-name">Елена</span>
+            </div>
+            <div class="story">
+                <div class="story-avatar">
+                    <img src="https://i.pravatar.cc/150?img=5" alt="Story">
+                </div>
+                <span class="story-name">Дмитрий</span>
+            </div>
+        </div>
+
+        <!-- Create Post -->
+        <div class="create-post">
+            <div class="create-post-header">
+                <div class="avatar">Я</div>
+                <input type="text" class="create-post-input" placeholder="Что у вас нового?" onclick="openUploadModal()">
+            </div>
+            <div class="create-post-actions">
+                <button class="action-btn" onclick="openUploadModal()">
+                    <i class="fas fa-camera" style="color: #ec4899;"></i> Фото/Видео
+                </button>
+                <button class="action-btn">
+                    <i class="fas fa-image" style="color: #6366f1;"></i> GIF
+                </button>
+                <button class="action-btn">
+                    <i class="fas fa-smile" style="color: #f59e0b;"></i> Feeling
                 </button>
             </div>
-
-            <div class="sidebar-section">
-                <div class="sidebar-title">Статистика</div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalPhotos">0</div>
-                        <div class="stat-label">Фотографий</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalAlbums">0</div>
-                        <div class="stat-label">Альбомов</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalLikes">0</div>
-                        <div class="stat-label">Лайков</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-value" id="totalViews">0</div>
-                        <div class="stat-label">Просмотров</div>
-                    </div>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Sidebar Overlay for Mobile -->
-        <div class="sidebar-overlay" id="sidebarOverlay" onclick="toggleMobileMenu()"></div>
-
-        <!-- Main Content -->
-        <main class="main-content">
-            <!-- Upload Section -->
-            <div class="upload-section">
-                <div class="upload-tabs">
-                    <button class="upload-tab active" onclick="switchUploadTab('upload')">
-                        <i class="fas fa-upload"></i> Загрузить
-                    </button>
-                    <button class="upload-tab" onclick="switchUploadTab('url')">
-                        <i class="fas fa-link"></i> URL
-                    </button>
-                    <button class="upload-tab" onclick="switchUploadTab('camera')">
-                        <i class="fas fa-camera"></i> Камера
-                    </button>
-                </div>
-
-                <div class="upload-area" id="uploadArea">
-                    <div class="upload-icon">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                    </div>
-                    <h3>Перетащите фото сюда</h3>
-                    <p>или нажмите, чтобы выбрать файлы</p>
-                    <div class="upload-formats">
-                        <span class="format-badge">JPG</span>
-                        <span class="format-badge">PNG</span>
-                        <span class="format-badge">GIF</span>
-                        <span class="format-badge">WEBP</span>
-                        <span class="format-badge">до 10MB</span>
-                    </div>
-                </div>
-                <input type="file" id="fileInput" accept="image/*" multiple style="display: none;">
-
-                <!-- URL Upload -->
-                <div class="upload-form" id="urlForm">
-                    <div class="form-group">
-                        <label>URL изображения</label>
-                        <input type="url" id="imageUrl" placeholder="https://example.com/image.jpg">
-                    </div>
-                    <button class="btn btn-primary" onclick="uploadFromUrl()">
-                        <i class="fas fa-plus"></i> Добавить
-                    </button>
-                </div>
-
-                <!-- Photo Form -->
-                <div class="photo-form" id="photoForm">
-                    <div class="form-grid">
-                        <div class="preview-section">
-                            <img id="previewImage" class="preview-image" src="" alt="Preview">
-                            <div class="image-filters">
-                                <button class="filter-btn active" onclick="applyFilter('none')">Оригинал</button>
-                                <button class="filter-btn" onclick="applyFilter('grayscale')">Ч/Б</button>
-                                <button class="filter-btn" onclick="applyFilter('sepia')">Сепия</button>
-                                <button class="filter-btn" onclick="applyFilter('vintage')">Винтаж</button>
-                            </div>
-                        </div>
-
-                        <div class="form-fields">
-                            <div class="form-group">
-                                <label>Название *</label>
-                                <input type="text" id="photoTitle" placeholder="Введите название">
-                            </div>
-
-                            <div class="form-group">
-                                <label>Описание</label>
-                                <textarea id="photoDesc" placeholder="Расскажите о фотографии..."></textarea>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Альбом</label>
-                                <select id="photoAlbum">
-                                    <option value="">Без альбома</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group">
-                                <label>Теги (через запятую)</label>
-                                <input type="text" id="photoTags" placeholder="природа, путешествие, лето">
-                            </div>
-
-                            <div class="form-actions">
-                                <button class="btn btn-primary" onclick="savePhoto()">
-                                    <i class="fas fa-save"></i> Опубликовать
-                                </button>
-                                <button class="btn btn-secondary" onclick="cancelUpload()">
-                                    <i class="fas fa-times"></i> Отмена
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Content Header -->
-            <div class="content-header">
-                <h1 class="content-title" id="contentTitle">Все фотографии</h1>
-                <div class="view-options">
-                    <select class="filter-select" id="sortSelect" onchange="sortPhotos()">
-                        <option value="newest">Сначала новые</option>
-                        <option value="oldest">Сначала старые</option>
-                        <option value="popular">По популярности</option>
-                        <option value="name">По названию</option>
-                    </select>
-                    <div class="view-toggle">
-                        <button class="active" onclick="setView('grid')" id="gridView">
-                            <i class="fas fa-th"></i>
-                        </button>
-                        <button onclick="setView('list')" id="listView">
-                            <i class="fas fa-list"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Gallery -->
-            <div class="gallery" id="gallery">
-                <!-- Photos will be inserted here -->
-            </div>
-        </main>
-    </div>
-
-    <!-- Image Modal -->
-    <div class="modal" id="imageModal">
-        <button class="modal-close" onclick="closeModal()">
-            <i class="fas fa-times"></i>
-        </button>
-        <button class="modal-nav prev" onclick="navigateModal(-1)">
-            <i class="fas fa-chevron-left"></i>
-        </button>
-        <div class="modal-content">
-            <img id="modalImage" class="modal-image" src="" alt="">
         </div>
-        <button class="modal-nav next" onclick="navigateModal(1)">
-            <i class="fas fa-chevron-right"></i>
-        </button>
+
+        <!-- Posts Feed -->
+        <div id="postsFeed">
+            <!-- Posts will be loaded here -->
+        </div>
+
+        <div class="loading" id="loading" style="display: none;">
+            <div class="spinner"></div>
+        </div>
     </div>
 
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
+    <!-- Upload Modal -->
+    <div class="modal" id="uploadModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Создать публикацию</h2>
+                <button class="close-btn" onclick="closeUploadModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <img id="uploadPreview" class="upload-preview" alt="Preview">
+            
+            <div class="upload-area" id="uploadArea" onclick="document.getElementById('fileInput').click()">
+                <i class="fas fa-cloud-upload-alt"></i>
+                <h3>Нажмите для загрузки фото</h3>
+                <p style="color: var(--text-secondary); margin-top: 0.5rem;">или перетащите файл сюда</p>
+            </div>
+            <input type="file" id="fileInput" accept="image/*" style="display: none;" onchange="handleFileSelect(event)">
+
+            <div class="form-group">
+                <label class="form-label">Описание</label>
+                <textarea class="form-textarea" id="postDescription" placeholder="Добавьте описание..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Местоположение</label>
+                <input type="text" class="form-input" placeholder="Где это было сделано?">
+            </div>
+
+            <button class="submit-btn" onclick="createPost()">
+                <i class="fas fa-paper-plane"></i> Опубликовать
+            </button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <nav class="bottom-nav">
+        <button class="nav-item active">
+            <i class="fas fa-home"></i>
+            <span>Главная</span>
+        </button>
+        <button class="nav-item">
+            <i class="fas fa-search"></i>
+            <span>Поиск</span>
+        </button>
+        <button class="nav-item" onclick="openUploadModal()">
+            <i class="fas fa-plus-square" style="font-size: 1.75rem;"></i>
+        </button>
+        <button class="nav-item">
+            <i class="fas fa-heart"></i>
+            <span>Уведомления</span>
+        </button>
+        <button class="nav-item">
+            <i class="fas fa-user"></i>
+            <span>Профиль</span>
+        </button>
+    </nav>
+
+    <!-- Toast -->
+    <div class="toast" id="toast"></div>
 
     <script>
-        // Data Storage
-        let photos = JSON.parse(localStorage.getItem('photos') || '[]');
-        let albums = JSON.parse(localStorage.getItem('albums') || '[]');
-        let comments = JSON.parse(localStorage.getItem('comments') || '{}');
-        let currentFilter = 'all';
-        let currentView = 'grid';
-        let currentModalIndex = 0;
+        // Data
+        let posts = JSON.parse(localStorage.getItem('posts')) || [
+            {
+                id: 1,
+                author: 'Анна Петрова',
+                avatar: 'https://i.pravatar.cc/150?img=2',
+                image: 'https://picsum.photos/600/600?random=1',
+                description: 'Прекрасный день в горах! 🏔️ #природа #путешествия',
+                likes: 24,
+                liked: false,
+                comments: [
+                    { author: 'Максим', text: 'Красиво!', avatar: 'https://i.pravatar.cc/150?img=3' },
+                    { author: 'Елена', text: 'Где это?', avatar: 'https://i.pravatar.cc/150?img=4' }
+                ],
+                time: '2 часа назад'
+            },
+            {
+                id: 2,
+                author: 'Максим Иванов',
+                avatar: 'https://i.pravatar.cc/150?img=3',
+                image: 'https://picsum.photos/600/700?random=2',
+                description: 'Новый проект завершен! 💪 #работа #успех',
+                likes: 56,
+                liked: true,
+                comments: [],
+                time: '4 часа назад'
+            }
+        ];
+
+        let currentUser = {
+            name: 'Я',
+            avatar: 'https://i.pravatar.cc/150?img=1'
+        };
+
         let currentUploadFile = null;
-        let currentFilterEffect = 'none';
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            checkLogin();
-            renderAlbums();
-            renderGallery();
-            updateStats();
-            setupEventListeners();
+            renderPosts();
         });
 
-        // Login System
-        function checkLogin() {
-            const isLoggedIn = sessionStorage.getItem('isLoggedIn');
-            if (isLoggedIn === 'true') {
-                document.getElementById('loginScreen').classList.add('hidden');
+        // Render Posts
+        function renderPosts() {
+            const feed = document.getElementById('postsFeed');
+            feed.innerHTML = posts.map(post => `
+                <article class="post">
+                    <div class="post-header">
+                        <div class="post-author">
+                            <img src="${post.avatar}" alt="${post.author}" class="avatar" style="width: 40px; height: 40px;">
+                            <div class="author-info">
+                                <h4>${post.author}</h4>
+                                <span>${post.time}</span>
+                            </div>
+                        </div>
+                        <button class="post-menu">
+                            <i class="fas fa-ellipsis-h"></i>
+                        </button>
+                    </div>
+                    
+                    <img src="${post.image}" alt="Post" class="post-image" ondblclick="likePost(${post.id})">
+                    
+                    <div class="post-content">
+                        <div class="post-actions">
+                            <button class="post-action-btn ${post.liked ? 'liked' : ''}" onclick="likePost(${post.id})">
+                                <i class="${post.liked ? 'fas' : 'far'} fa-heart"></i>
+                                <span>Нравится</span>
+                            </button>
+                            <button class="post-action-btn" onclick="toggleComments(${post.id})">
+                                <i class="far fa-comment"></i>
+                                <span>Комментировать</span>
+                            </button>
+                            <button class="post-action-btn">
+                                <i class="far fa-paper-plane"></i>
+                                <span>Поделиться</span>
+                            </button>
+                        </div>
+                        
+                        <div class="post-likes">${post.likes} отметок "Нравится"</div>
+                        
+                        <div class="post-description">
+                            <strong>${post.author}</strong> ${post.description}
+                        </div>
+                        
+                        ${post.comments.length > 0 ? `
+                            <span class="view-comments" onclick="toggleComments(${post.id})">
+                                Посмотреть все комментарии (${post.comments.length})
+                            </span>
+                        ` : ''}
+                        
+                        <div class="post-time">${post.time}</div>
+                        
+                        <div class="comments-section" id="comments-${post.id}">
+                            ${post.comments.map(comment => `
+                                <div class="comment">
+                                    <div class="comment-avatar">${comment.author[0]}</div>
+                                    <div class="comment-content">
+                                        <div class="comment-author">${comment.author}</div>
+                                        <div class="comment-text">${comment.text}</div>
+                                    </div>
+                                </div>
+                            `).join('')}
+                            
+                            <div class="add-comment">
+                                <input type="text" class="comment-input" placeholder="Добавьте комментарий..." 
+                                    onkeypress="if(event.key==='Enter') addComment(${post.id}, this)">
+                                <button class="send-btn" onclick="addComment(${post.id}, this.previousElementSibling)">
+                                    <i class="fas fa-paper-plane"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+            `).join('');
+        }
+
+        // Like Post
+        function likePost(id) {
+            const post = posts.find(p => p.id === id);
+            if (post) {
+                post.liked = !post.liked;
+                post.likes += post.liked ? 1 : -1;
+                savePosts();
+                renderPosts();
             }
         }
 
-        function login() {
-            const password = document.getElementById('passwordInput').value;
-            if (password === 'admin') {
-                sessionStorage.setItem('isLoggedIn', 'true');
-                document.getElementById('loginScreen').classList.add('hidden');
-                showToast('Добро пожаловать!', 'success');
-            } else {
-                showToast('Неверный пароль', 'error');
+        // Toggle Comments
+        function toggleComments(id) {
+            const section = document.getElementById(`comments-${id}`);
+            section.classList.toggle('active');
+        }
+
+        // Add Comment
+        function addComment(postId, input) {
+            const text = input.value.trim();
+            if (!text) return;
+
+            const post = posts.find(p => p.id === postId);
+            if (post) {
+                post.comments.push({
+                    author: currentUser.name,
+                    text: text,
+                    avatar: currentUser.avatar
+                });
+                input.value = '';
+                savePosts();
+                renderPosts();
+                toggleComments(postId);
+                showToast('Комментарий добавлен');
             }
         }
 
-        function logout() {
-            sessionStorage.removeItem('isLoggedIn');
-            location.reload();
+        // Upload Modal
+        function openUploadModal() {
+            document.getElementById('uploadModal').classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
 
-        // Theme Toggle
-        function toggleTheme() {
-            const html = document.documentElement;
-            const icon = document.getElementById('themeIcon');
-            
-            if (html.getAttribute('data-theme') === 'dark') {
-                html.removeAttribute('data-theme');
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
-                localStorage.setItem('theme', 'light');
-            } else {
-                html.setAttribute('data-theme', 'dark');
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
-                localStorage.setItem('theme', 'dark');
-            }
+        function closeUploadModal() {
+            document.getElementById('uploadModal').classList.remove('active');
+            document.body.style.overflow = '';
+            currentUploadFile = null;
+            document.getElementById('uploadPreview').classList.remove('active');
+            document.getElementById('postDescription').value = '';
         }
 
-        // Load saved theme
-        const savedTheme = localStorage.getItem('theme');
-        if (savedTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            document.getElementById('themeIcon').classList.remove('fa-moon');
-            document.getElementById('themeIcon').classList.add('fa-sun');
-        }
-
-        // Upload Functions
-        function setupEventListeners() {
-            const uploadArea = document.getElementById('uploadArea');
-            const fileInput = document.getElementById('fileInput');
-
-            uploadArea.addEventListener('click', () => fileInput.click());
-
-            uploadArea.addEventListener('dragover', (e) => {
-                e.preventDefault();
-                uploadArea.classList.add('dragover');
-            });
-
-            uploadArea.addEventListener('dragleave', () => {
-                uploadArea.classList.remove('dragover');
-            });
-
-            uploadArea.addEventListener('drop', (e) => {
-                e.preventDefault();
-                uploadArea.classList.remove('dragover');
-                const files = e.dataTransfer.files;
-                if (files.length > 0) handleFiles(files);
-            });
-
-            fileInput.addEventListener('change', (e) => {
-                if (e.target.files.length > 0) handleFiles(e.target.files);
-            });
-        }
-
-        function handleFiles(files) {
-            const file = files[0];
+        // Handle File Select
+        function handleFileSelect(event) {
+            const file = event.target.files[0];
             if (file && file.type.startsWith('image/')) {
                 currentUploadFile = file;
                 const reader = new FileReader();
                 reader.onload = (e) => {
-                    document.getElementById('previewImage').src = e.target.result;
-                    document.getElementById('photoForm').classList.add('active');
-                    updateAlbumSelect();
+                    const preview = document.getElementById('uploadPreview');
+                    preview.src = e.target.result;
+                    preview.classList.add('active');
+                    document.getElementById('uploadArea').style.display = 'none';
                 };
                 reader.readAsDataURL(file);
             }
         }
 
-        function switchUploadTab(tab) {
-            document.querySelectorAll('.upload-tab').forEach(t => t.classList.remove('active'));
-            event.target.closest('.upload-tab').classList.add('active');
-
-            const urlForm = document.getElementById('urlForm');
-            const uploadArea = document.getElementById('uploadArea');
-
-            if (tab === 'url') {
-                uploadArea.style.display = 'none';
-                urlForm.style.display = 'block';
-            } else if (tab === 'camera') {
-                uploadArea.style.display = 'block';
-                urlForm.style.display = 'none';
-                // In real app, would access camera API
-                showToast('Доступ к камере запрашивается...', 'success');
-            } else {
-                uploadArea.style.display = 'block';
-                urlForm.style.display = 'none';
-            }
-        }
-
-        function uploadFromUrl() {
-            const url = document.getElementById('imageUrl').value;
-            if (url) {
-                document.getElementById('previewImage').src = url;
-                document.getElementById('photoForm').classList.add('active');
-                updateAlbumSelect();
-                currentUploadFile = { name: 'url-image.jpg' };
-            }
-        }
-
-        function applyFilter(filter) {
-            currentFilterEffect = filter;
-            const img = document.getElementById('previewImage');
-            
-            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-            event.target.classList.add('active');
-
-            const filters = {
-                none: 'none',
-                grayscale: 'grayscale(100%)',
-                sepia: 'sepia(100%)',
-                vintage: 'sepia(50%) contrast(120%) brightness(90%)'
-            };
-
-            img.style.filter = filters[filter];
-        }
-
-        function updateAlbumSelect() {
-            const select = document.getElementById('photoAlbum');
-            select.innerHTML = '<option value="">Без альбома</option>';
-            albums.forEach(album => {
-                select.innerHTML += `<option value="${album.id}">${album.name}</option>`;
-            });
-        }
-
-        function savePhoto() {
-            const title = document.getElementById('photoTitle').value;
-            const desc = document.getElementById('photoDesc').value;
-            const album = document.getElementById('photoAlbum').value;
-            const tags = document.getElementById('photoTags').value;
-
-            if (!title) {
-                showToast('Введите название фотографии', 'error');
+        // Create Post
+        function createPost() {
+            if (!currentUploadFile) {
+                showToast('Выберите фото для публикации', 'error');
                 return;
             }
 
-            const photo = {
-                id: Date.now(),
-                src: document.getElementById('previewImage').src,
-                title,
-                desc,
-                album,
-                tags: tags.split(',').map(t => t.trim()).filter(t => t),
-                filter: currentFilterEffect,
-                likes: 0,
-                views: 0,
-                liked: false,
-                date: new Date().toISOString(),
-                author: 'JD'
-            };
-
-            photos.unshift(photo);
-            localStorage.setItem('photos', JSON.stringify(photos));
-
-            // Reset form
-            document.getElementById('photoForm').classList.remove('active');
-            document.getElementById('photoTitle').value = '';
-            document.getElementById('photoDesc').value = '';
-            document.getElementById('photoTags').value = '';
-            document.getElementById('fileInput').value = '';
-            currentUploadFile = null;
-            currentFilterEffect = 'none';
-
-            renderGallery();
-            updateStats();
-            showToast('Фотография опубликована!', 'success');
-        }
-
-        function cancelUpload() {
-            document.getElementById('photoForm').classList.remove('active');
-            document.getElementById('fileInput').value = '';
-            currentUploadFile = null;
-        }
-
-        // Album Functions
-        function createAlbum() {
-            const name = prompt('Название альбома:');
-            if (name) {
-                const album = {
+            const description = document.getElementById('postDescription').value;
+            const reader = new FileReader();
+            
+            reader.onload = (e) => {
+                const newPost = {
                     id: Date.now(),
-                    name,
-                    created: new Date().toISOString()
+                    author: currentUser.name,
+                    avatar: currentUser.avatar,
+                    image: e.target.result,
+                    description: description || 'Без описания',
+                    likes: 0,
+                    liked: false,
+                    comments: [],
+                    time: 'Только что'
                 };
-                albums.push(album);
-                localStorage.setItem('albums', JSON.stringify(albums));
-                renderAlbums();
-                updateStats();
-                showToast('Альбом создан!', 'success');
-            }
-        }
 
-        function deleteAlbum(id, event) {
-            event.stopPropagation();
-            if (confirm('Удалить альбом?')) {
-                albums = albums.filter(a => a.id !== id);
-                photos.forEach(p => {
-                    if (p.album == id) p.album = '';
-                });
-                localStorage.setItem('albums', JSON.stringify(albums));
-                localStorage.setItem('photos', JSON.stringify(photos));
-                renderAlbums();
-                renderGallery();
-                updateStats();
-                showToast('Альбом удален', 'success');
-            }
-        }
-
-        function renderAlbums() {
-            const container = document.getElementById('albumsList');
-            if (albums.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-secondary); font-size: 0.9rem; text-align: center;">Нет альбомов</p>';
-            } else {
-                container.innerHTML = albums.map(album => {
-                    const count = photos.filter(p => p.album == album.id).length;
-                    return `
-                        <div class="album-item" onclick="filterByAlbum(${album.id})">
-                            <div class="album-info">
-                                <h4>${album.name}</h4>
-                                <span>${count} фото</span>
-                            </div>
-                            <div class="album-actions">
-                                <button onclick="deleteAlbum(${album.id}, event)">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                        </div>
-                    `;
-                }).join('');
-            }
-            document.getElementById('totalAlbums').textContent = albums.length;
-        }
-
-        // Gallery Functions
-        function renderGallery() {
-            const gallery = document.getElementById('gallery');
-            let filteredPhotos = [...photos];
-
-            // Apply filters
-            if (currentFilter === 'favorites') {
-                filteredPhotos = photos.filter(p => p.liked);
-            } else if (currentFilter === 'recent') {
-                filteredPhotos = photos.slice(0, 10);
-            } else if (currentFilter === 'popular') {
-                filteredPhotos = [...photos].sort((a, b) => b.likes - a.likes);
-            }
-
-            // Apply search
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            if (searchTerm) {
-                filteredPhotos = filteredPhotos.filter(p => 
-                    p.title.toLowerCase().includes(searchTerm) ||
-                    p.desc.toLowerCase().includes(searchTerm) ||
-                    p.tags.some(t => t.toLowerCase().includes(searchTerm))
-                );
-            }
-
-            // Apply sorting
-            const sortValue = document.getElementById('sortSelect').value;
-            filteredPhotos.sort((a, b) => {
-                if (sortValue === 'newest') return new Date(b.date) - new Date(a.date);
-                if (sortValue === 'oldest') return new Date(a.date) - new Date(b.date);
-                if (sortValue === 'popular') return b.likes - a.likes;
-                if (sortValue === 'name') return a.title.localeCompare(b.title);
-            });
-
-            if (filteredPhotos.length === 0) {
-                gallery.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">📷</div>
-                        <h2>Нет фотографий</h2>
-                        <p>Загрузите первое фото, чтобы начать</p>
-                        <button class="btn btn-primary" onclick="document.getElementById('fileInput').click()">
-                            <i class="fas fa-upload"></i> Загрузить фото
-                        </button>
-                    </div>
-                `;
-                return;
-            }
-
-            gallery.className = `gallery ${currentView}`;
-            gallery.innerHTML = filteredPhotos.map((photo, index) => {
-                const album = albums.find(a => a.id == photo.album);
-                const photoComments = comments[photo.id] || [];
-                
-                return `
-                    <div class="photo-card ${currentView}" data-id="${photo.id}">
-                        <div class="photo-image-wrapper" onclick="openModal(${index})">
-                            <img src="${photo.src}" alt="${photo.title}" class="photo-image" style="filter: ${getFilterStyle(photo.filter)}">
-                            <div class="photo-overlay">
-                                <button class="overlay-btn" onclick="event.stopPropagation(); downloadPhoto('${photo.src}', '${photo.title}')">
-                                    <i class="fas fa-download"></i>
-                                </button>
-                                <button class="overlay-btn" onclick="event.stopPropagation(); sharePhoto('${photo.title}')">
-                                    <i class="fas fa-share-alt"></i>
-                                </button>
-                                <button class="overlay-btn" onclick="event.stopPropagation(); deletePhoto(${photo.id})">
-                                    <i class="fas fa-trash"></i>
-                                </button>
-                            </div>
-                            ${album ? `<span class="photo-badge">${album.name}</span>` : ''}
-                        </div>
-                        <div class="photo-content">
-                            <div class="photo-header">
-                                <div>
-                                    <h3 class="photo-title">${photo.title}</h3>
-                                    ${album ? `<span class="photo-album"><i class="fas fa-folder"></i> ${album.name}</span>` : ''}
-                                </div>
-                            </div>
-                            ${photo.desc ? `<p class="photo-desc">${photo.desc}</p>` : ''}
-                            ${photo.tags.length > 0 ? `
-                                <div style="margin-bottom: 1rem;">
-                                    ${photo.tags.map(tag => `<span style="display: inline-block; background: var(--bg); padding: 0.25rem 0.625rem; border-radius: 15px; font-size: 0.8rem; margin-right: 0.5rem; color: var(--primary);">#${tag}</span>`).join('')}
-                                </div>
-                            ` : ''}
-                            <div class="photo-meta">
-                                <span class="photo-date">${formatDate(photo.date)}</span>
-                                <div class="photo-actions">
-                                    <button class="action-btn ${photo.liked ? 'liked' : ''}" onclick="toggleLike(${photo.id})">
-                                        <i class="fas fa-heart"></i>
-                                        <span class="like-count">${photo.likes}</span>
-                                    </button>
-                                    <button class="action-btn" onclick="toggleComments(${photo.id})">
-                                        <i class="fas fa-comment"></i>
-                                        <span>${photoComments.length}</span>
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="comments-section" id="comments-${photo.id}" style="display: none;">
-                                <div class="comments-header">
-                                    <span class="comments-count">${photoComments.length} комментариев</span>
-                                </div>
-                                <div class="comments-list">
-                                    ${photoComments.map(c => `
-                                        <div class="comment">
-                                            <div class="comment-avatar">${c.author[0]}</div>
-                                            <div class="comment-content">
-                                                <div class="comment-author">${c.author}</div>
-                                                <div class="comment-text">${c.text}</div>
-                                            </div>
-                                        </div>
-                                    `).join('')}
-                                </div>
-                                <div class="comment-form">
-                                    <input type="text" class="comment-input" placeholder="Написать комментарий..." 
-                                        onkeypress="if(event.key==='Enter') addComment(${photo.id}, this)">
-                                    <button class="btn btn-primary btn-icon" onclick="addComment(${photo.id}, this.previousElementSibling)">
-                                        <i class="fas fa-paper-plane"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-
-        function getFilterStyle(filter) {
-            const filters = {
-                none: 'none',
-                grayscale: 'grayscale(100%)',
-                sepia: 'sepia(100%)',
-                vintage: 'sepia(50%) contrast(120%) brightness(90%)'
+                posts.unshift(newPost);
+                savePosts();
+                renderPosts();
+                closeUploadModal();
+                showToast('Публикация создана!');
             };
-            return filters[filter] || 'none';
+
+            reader.readAsDataURL(currentUploadFile);
         }
 
-        function filterBy(type) {
-            currentFilter = type;
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            event.target.closest('.nav-item').classList.add('active');
-            
-            const titles = {
-                all: 'Все фотографии',
-                favorites: 'Избранное',
-                recent: 'Недавние',
-                popular: 'Популярное'
-            };
-            document.getElementById('contentTitle').textContent = titles[type];
-            
-            renderGallery();
-            if (window.innerWidth <= 768) toggleMobileMenu();
+        // Save Posts
+        function savePosts() {
+            localStorage.setItem('posts', JSON.stringify(posts));
         }
 
-        function filterByAlbum(albumId) {
-            currentFilter = 'album';
-            const album = albums.find(a => a.id === albumId);
-            document.getElementById('contentTitle').textContent = album ? album.name : 'Альбом';
-            renderGallery();
-            if (window.innerWidth <= 768) toggleMobileMenu();
-        }
-
-        function searchPhotos() {
-            renderGallery();
-        }
-
-        function sortPhotos() {
-            renderGallery();
-        }
-
-        function setView(view) {
-            currentView = view;
-            document.getElementById('gridView').classList.toggle('active', view === 'grid');
-            document.getElementById('listView').classList.toggle('active', view === 'list');
-            renderGallery();
-        }
-
-        // Photo Actions
-        function toggleLike(id) {
-            const photo = photos.find(p => p.id === id);
-            if (photo) {
-                photo.liked = !photo.liked;
-                photo.likes += photo.liked ? 1 : -1;
-                localStorage.setItem('photos', JSON.stringify(photos));
-                renderGallery();
-                updateStats();
-            }
-        }
-
-        function toggleComments(id) {
-            const section = document.getElementById(`comments-${id}`);
-            section.style.display = section.style.display === 'none' ? 'block' : 'none';
-        }
-
-        function addComment(photoId, input) {
-            const text = input.value.trim();
-            if (!text) return;
-
-            if (!comments[photoId]) comments[photoId] = [];
-            comments[photoId].push({
-                author: 'JD',
-                text,
-                date: new Date().toISOString()
-            });
-
-            localStorage.setItem('comments', JSON.stringify(comments));
-            input.value = '';
-            renderGallery();
-            showToast('Комментарий добавлен', 'success');
-        }
-
-        function deletePhoto(id) {
-            if (confirm('Удалить эту фотографию?')) {
-                photos = photos.filter(p => p.id !== id);
-                delete comments[id];
-                localStorage.setItem('photos', JSON.stringify(photos));
-                localStorage.setItem('comments', JSON.stringify(comments));
-                renderGallery();
-                updateStats();
-                showToast('Фотография удалена', 'success');
-            }
-        }
-
-        function downloadPhoto(src, title) {
-            const link = document.createElement('a');
-            link.href = src;
-            link.download = `${title}.jpg`;
-            link.click();
-            showToast('Загрузка началась', 'success');
-        }
-
-        function sharePhoto(title) {
-            if (navigator.share) {
-                navigator.share({
-                    title: title,
-                    text: `Посмотрите фотографию: ${title}`,
-                    url: window.location.href
-                });
-            } else {
-                // Copy to clipboard
-                navigator.clipboard.writeText(window.location.href);
-                showToast('Ссылка скопирована', 'success');
-            }
-        }
-
-        // Modal
-        function openModal(index) {
-            currentModalIndex = index;
-            const modal = document.getElementById('imageModal');
-            const img = document.getElementById('modalImage');
-            const filteredPhotos = getFilteredPhotos();
-            
-            img.src = filteredPhotos[index].src;
-            modal.classList.add('active');
-            
-            // Increment view count
-            filteredPhotos[index].views++;
-            localStorage.setItem('photos', JSON.stringify(photos));
-            updateStats();
-        }
-
-        function closeModal() {
-            document.getElementById('imageModal').classList.remove('active');
-        }
-
-        function navigateModal(direction) {
-            const filteredPhotos = getFilteredPhotos();
-            currentModalIndex += direction;
-            
-            if (currentModalIndex < 0) currentModalIndex = filteredPhotos.length - 1;
-            if (currentModalIndex >= filteredPhotos.length) currentModalIndex = 0;
-            
-            document.getElementById('modalImage').src = filteredPhotos[currentModalIndex].src;
-        }
-
-        function getFilteredPhotos() {
-            let filtered = [...photos];
-            if (currentFilter === 'favorites') filtered = photos.filter(p => p.liked);
-            else if (currentFilter === 'recent') filtered = photos.slice(0, 10);
-            else if (currentFilter === 'popular') filtered = [...photos].sort((a, b) => b.likes - a.likes);
-            
-            const searchTerm = document.getElementById('searchInput').value.toLowerCase();
-            if (searchTerm) {
-                filtered = filtered.filter(p => 
-                    p.title.toLowerCase().includes(searchTerm) ||
-                    p.desc.toLowerCase().includes(searchTerm)
-                );
-            }
-            return filtered;
-        }
-
-        // Stats
-        function updateStats() {
-            document.getElementById('totalPhotos').textContent = photos.length;
-            document.getElementById('totalAlbums').textContent = albums.length;
-            document.getElementById('totalLikes').textContent = photos.reduce((sum, p) => sum + p.likes, 0);
-            document.getElementById('totalViews').textContent = photos.reduce((sum, p) => sum + (p.views || 0), 0);
-        }
-
-        // Utilities
-        function formatDate(dateString) {
-            const date = new Date(dateString);
-            const now = new Date();
-            const diff = now - date;
-            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-
-            if (days === 0) return 'Сегодня';
-            if (days === 1) return 'Вчера';
-            if (days < 7) return `${days} дн. назад`;
-            if (days < 30) return `${Math.floor(days / 7)} нед. назад`;
-            
-            return date.toLocaleDateString('ru-RU', {
-                day: 'numeric',
-                month: 'long',
-                year: 'numeric'
-            });
-        }
-
+        // Toast Notification
         function showToast(message, type = 'success') {
-            const container = document.getElementById('toastContainer');
-            const toast = document.createElement('div');
-            toast.className = `toast ${type}`;
-            
-            const icon = type === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle';
-            
-            toast.innerHTML = `
-                <i class="fas ${icon} toast-icon"></i>
-                <span>${message}</span>
-            `;
-            
-            container.appendChild(toast);
+            const toast = document.getElementById('toast');
+            toast.textContent = message;
+            toast.style.background = type === 'error' ? '#ef4444' : '#1e293b';
+            toast.classList.add('show');
             
             setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateX(100%)';
-                setTimeout(() => toast.remove(), 300);
+                toast.classList.remove('show');
             }, 3000);
         }
 
-        function toggleMobileMenu() {
-            document.getElementById('sidebar').classList.toggle('active');
-            document.getElementById('sidebarOverlay').classList.toggle('active');
-        }
-
-        function showNotifications() {
-            showToast('У вас 3 новых уведомления', 'success');
-            document.getElementById('notifBadge').style.display = 'none';
-        }
-
-        function showProfile() {
-            showToast('Профиль пользователя', 'success');
-        }
-
-        // Keyboard shortcuts
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-            if (e.key === 'ArrowLeft' && document.getElementById('imageModal').classList.contains('active')) {
-                navigateModal(-1);
-            }
-            if (e.key === 'ArrowRight' && document.getElementById('imageModal').classList.contains('active')) {
-                navigateModal(1);
+        // Close modal on outside click
+        document.getElementById('uploadModal').addEventListener('click', (e) => {
+            if (e.target.id === 'uploadModal') {
+                closeUploadModal();
             }
         });
 
-        // Close modal on outside click
-        document.getElementById('imageModal').addEventListener('click', (e) => {
-            if (e.target.id === 'imageModal') closeModal();
+        // Drag and Drop
+        const uploadArea = document.getElementById('uploadArea');
+        
+        uploadArea.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--primary)';
+            uploadArea.style.background = 'rgba(99, 102, 241, 0.1)';
+        });
+
+        uploadArea.addEventListener('dragleave', () => {
+            uploadArea.style.borderColor = 'var(--border)';
+            uploadArea.style.background = '';
+        });
+
+        uploadArea.addEventListener('drop', (e) => {
+            e.preventDefault();
+            uploadArea.style.borderColor = 'var(--border)';
+            uploadArea.style.background = '';
+            
+            const file = e.dataTransfer.files[0];
+            if (file && file.type.startsWith('image/')) {
+                currentUploadFile = file;
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    const preview = document.getElementById('uploadPreview');
+                    preview.src = event.target.result;
+                    preview.classList.add('active');
+                    uploadArea.style.display = 'none';
+                };
+                reader.readAsDataURL(file);
+            }
         });
     </script>
 </body>
